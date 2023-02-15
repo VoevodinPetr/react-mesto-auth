@@ -1,0 +1,4 @@
+.header__button-menu_opened {
+  background-image: url(../../../../image/Icon_close_burger.svg);
+  background-size: 20px auto;
+}
