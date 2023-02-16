@@ -1,52 +1,49 @@
-const BASE_URL = 'https://auth.nomoreparties.co';
+class Auth {
+  constructor(baseUrl) {
+    this._baseUrl = baseUrl;
+  }
 
-export function register({email, password}) {
-  const url = `${BASE_URL}/signup`;
-  return fetch(url, {
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({email, password}),
-  })
-    .then(res => {
-      if (res.ok) return res.json();
-      return res.json().then((res) => {
-        throw new Error(res.message);
-      });
+  _checkResponse(res) {
+    if (res.ok) return res.json();
+    return res.json().then((res) => {
+      throw new Error(res.message);
     });
+  }
+
+  register({ email, password }) {
+    const url = `${this._baseUrl}/signup`;
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    }).then(this._checkResponse);
+  }
+
+  authorize({ email, password }) {
+    const url = `${this._baseUrl}/signin`;
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    }).then(this._checkResponse);
+  }
+
+  checkToken(token) {
+    const url = `${this._baseUrl}/users/me`;
+    return fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(this._checkResponse);
+  }
 }
 
-export function authorize({email, password}) {
-  const url = `${BASE_URL}/signin`;
-  return fetch(url, {
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({email, password}),
-  })
-    .then(res => {
-      if (res.ok) return res.json();
-      return res.json().then((res) => {
-        throw new Error(res.message);
-      });
-    });
-}
+const auth = new Auth("https://auth.nomoreparties.co");
 
-export function checkToken(token) {
-  const url = `${BASE_URL}/users/me`;
-  return fetch(url, {
-    method: 'GET',
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization" : `Bearer ${token}`
-    },
-  })
-    .then(res => {
-      if (res.ok) return res.json();
-      return res.json().then((res) => {
-        throw new Error(res.message);
-      });
-    });
-}
+export default auth;

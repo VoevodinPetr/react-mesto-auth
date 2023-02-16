@@ -14,7 +14,7 @@ import InfoTooltip from "./InfoTooltip";
 import ProtectedRoute from "./ProtectedRoute";
 
 import api from "../utils/api";
-import * as auth from "../utils/auth";
+import auth from "../utils/auth";
 
 import CurrentUserContext from "../contexts/CurrentUserContext";
 
@@ -145,8 +145,19 @@ function App() {
     }
   }, [navigate]);
 
-  function handleLogin() {
-    setIsLoggedIn(true);
+  function handleLogin(inputs) {
+    return auth.authorize(inputs).then((res) => {
+      if (res.token) localStorage.setItem("token", res.token);
+
+      setIsLoggedIn(true);
+      navigate("/");
+    });
+  }
+
+  function handleRegister(inputs) {
+    return auth.register(inputs).then(() => {
+      navigate("/sign-in");
+    });
   }
 
   function handleLogout() {
@@ -188,7 +199,7 @@ function App() {
 
           <Route
             path="/sign-up"
-            element={<Register handleInfoMessage={handleInfoMessage} />}
+            element={<Register handleInfoMessage={handleInfoMessage} handleRegister={handleRegister} />}
           />
 
           <Route

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Header from "./Header";
-import * as auth from "../utils/auth";
 
 function Login({ handleInfoMessage, onLogin }) {
   const defaultValues = {
@@ -11,23 +10,19 @@ function Login({ handleInfoMessage, onLogin }) {
   };
 
   const [inputs, setInputs] = useState(defaultValues);
-  const navigate = useNavigate();
 
-  function handleChange(event) {
-    const value = event.target.value;
-    const name = event.target.name;
+  function handleChange(e) {
+    const value = e.target.value;
+    const name = e.target.name;
     setInputs((state) => ({ ...state, [name]: value }));
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    auth
-      .authorize(inputs)
-      .then(res => {
-        if (res.token) localStorage.setItem("token", res.token);
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    onLogin(inputs)
+      .then(() => {
         resetForm();
-        onLogin();
-        navigate("/");
       })
       .catch((err) => {
         const text = err.message || "Что-то пошло не так! Попробуйте еще раз.";
