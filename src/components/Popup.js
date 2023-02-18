@@ -30,7 +30,7 @@ const Popup = ({ isOpen, name, onClose, children }) => {
       className={`popup popup_type_${name}` + (isOpen && " popup_is-opened")}
       onClick={handleOverlay}
     >
-      <div className="popup__container">
+      <div className={ `popup__${ name === "picture" ? "img-container" : "container" }` }>
         {children}
 
         <button
