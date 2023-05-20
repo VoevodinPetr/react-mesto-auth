@@ -1,25 +1,14 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
 import Header from "./Header";
 
 function Register({ handleInfoMessage, handleRegister }) {
-  const defaultValues = {
-    email: "",
-    password: "",
-  };
-
-  const [inputs, setInputs] = useState(defaultValues);
-
-  function handleChange(e) {
-    const value = e.target.value;
-    const name = e.target.name;
-    setInputs((state) => ({ ...state, [name]: value }));
-  }
+  const { values, handleChange, isValid, resetForm, errors } = useFormAndValidation({});
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    handleRegister(inputs)
+    handleRegister(values)
       .then(() => {
         handleInfoMessage({
           text: "Вы успешно зарегистрировались!",
@@ -34,10 +23,6 @@ function Register({ handleInfoMessage, handleRegister }) {
           isSuccess: false,
         });
       });
-  }
-
-  function resetForm() {
-    setInputs({ ...defaultValues });
   }
 
   return (
@@ -57,20 +42,31 @@ function Register({ handleInfoMessage, handleRegister }) {
               className="login__input"
               placeholder="Email"
               name="email"
-              value={inputs.email}
+              value={values.email}
               onChange={handleChange}
               required
             />
+            {errors?.email && <span className="login__input-error">{errors.email}</span>}
             <input
               type="password"
               className="login__input"
               placeholder="Пароль"
               name="password"
-              value={inputs.password}
+              minLength="6"
+              value={values.password}
               onChange={handleChange}
               required
             />
-            <button type="submit" className="button button_type_login">
+            {errors?.password && <span className="login__input-error">{errors.password}</span>}
+            <button
+              type="submit"
+              className={
+                isValid
+                  ? "button button_type_login"
+                  : "button button_type_login button_type_disabled"
+              }
+              disabled={!isValid}
+            >
               Зарегистрироваться
             </button>
           </form>

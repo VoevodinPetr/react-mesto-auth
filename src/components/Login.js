@@ -1,26 +1,14 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
 import Header from "./Header";
 
 function Login({ handleInfoMessage, onLogin }) {
-  const defaultValues = {
-    email: "",
-    password: "",
-  };
-
-  const [inputs, setInputs] = useState(defaultValues);
-
-  function handleChange(e) {
-    const value = e.target.value;
-    const name = e.target.name;
-    setInputs((state) => ({ ...state, [name]: value }));
-  }
+  const { values, handleChange, isValid, resetForm, errors } = useFormAndValidation({});
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    onLogin(inputs)
+    onLogin(values)
       .then(() => {
         resetForm();
       })
@@ -31,10 +19,6 @@ function Login({ handleInfoMessage, onLogin }) {
           isSuccess: false,
         });
       });
-  }
-
-  function resetForm() {
-    setInputs({ ...defaultValues });
   }
 
   return (
@@ -54,20 +38,30 @@ function Login({ handleInfoMessage, onLogin }) {
               type="email"
               placeholder="Email"
               name="email"
-              value={inputs.email}
+              value={values.email}
               onChange={handleChange}
               required
             />
+            {errors?.email && <span className="login__input-error">{errors.email}</span>}
             <input
               className="login__input"
               type="password"
               placeholder="Пароль"
               name="password"
-              value={inputs.password}
+              value={values.password}
               onChange={handleChange}
               required
             />
-            <button className="button button_type_login" type="submit">
+            {errors?.password && <span className="login__input-error">{errors.password}</span>}
+            <button
+              type="submit"
+              className={
+                isValid
+                  ? "button button_type_login"
+                  : "button button_type_login button_type_disabled"
+              }
+              disabled={!isValid}
+            >
               Войти
             </button>
           </form>

@@ -1,0 +1,10 @@
+name: react-mesto-auth
+id: 6df38d18-36f5-4d8d-937d-9dbfe6946625
+languages:
+  - TypeScript
+  - TSX
+extensions:
+  - .ts
+  - .cts
+  - .mts
+  - .tsx

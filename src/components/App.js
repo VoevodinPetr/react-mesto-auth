@@ -145,8 +145,8 @@ function App() {
     }
   }, [navigate]);
 
-  function handleLogin(inputs) {
-    return auth.authorize(inputs).then((res) => {
+  function handleLogin(email, password ) {
+    return auth.authorize(email, password ).then((res) => {
       if (res.token) localStorage.setItem("token", res.token);
 
       setIsLoggedIn(true);
@@ -154,8 +154,8 @@ function App() {
     });
   }
 
-  function handleRegister(inputs) {
-    return auth.register(inputs).then(() => {
+  function handleRegister(email, password ) {
+    return auth.register(email, password ).then(() => {
       navigate("/sign-in");
     });
   }
